@@ -1,0 +1,136 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "InvokePipeline",
+        "typeProperties": {
+          "parameters": {},
+          "waitOnCompletion": true,
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "pipelineId": "19738d2e-8eef-b487-496f-6ec7f4ee5326",
+          "operationType": "InvokeFabricPipeline"
+        },
+        "externalReferences": {
+          "connection": "0bb861e2-29dd-4c84-af94-adbf8dee37bb"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Landing_bronze",
+        "dependsOn": []
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "430f05f4-86f5-b550-4b20-57cd3c1c2b5b",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "today_date": {
+              "value": {
+                "value": "@formatDateTime(utcNow(), 'yyyy-MM-dd')",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "workspace": {
+              "value": "Student_dev",
+              "type": "string"
+            }
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Landing_to_bronze",
+        "dependsOn": [
+          {
+            "activity": "Landing_bronze",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "39e7323f-74e7-9f23-42d2-17da6cdfd3c1",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "today_date": {
+              "value": {
+                "value": "@formatDateTime(utcNow(),'yyyy-MM-dd')",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "workspace": {
+              "value": "Student_dev",
+              "type": "string"
+            }
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Bronze_to_silver",
+        "dependsOn": [
+          {
+            "activity": "Landing_to_bronze",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "cdb6187b-2083-aa0e-4059-d3b10bd0ca27",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "today_date": {
+              "value": {
+                "value": "@formatDateTime(utcNow(),'yyyy-MM-dd' )",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "workspace": {
+              "value": "Student_dev",
+              "type": "string"
+            }
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Gold_layer",
+        "dependsOn": [
+          {
+            "activity": "Bronze_to_silver",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

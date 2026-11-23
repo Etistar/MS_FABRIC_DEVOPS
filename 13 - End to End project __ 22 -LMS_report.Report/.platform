@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "13 - End to End project __ 22 -LMS_report"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "18ca22d2-3072-ade8-4b3b-afcd87ae6aa6"
+  }
+}
